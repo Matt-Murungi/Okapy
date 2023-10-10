@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "build",
+    "site": "okapy-admin",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+
+

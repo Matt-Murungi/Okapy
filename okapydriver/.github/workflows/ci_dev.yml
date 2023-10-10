@@ -1,0 +1,62 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  build_android:
+    name: Build Flutter (android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "16.0.*"
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter build apk --debug
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: 1:119509377299:android:77f41e22321d687a44fae6
+          token: 1//03A3nhPAom2R-CgYIARAAGAMSNwF-L9IrJETsJcOs4mvMYdw5UbC2Kx4Ex2M0RpxNthT6kp2175-60iAx3mNTsM80jD_IgyVZPMQ
+          groups: test-group
+          file: build/app/outputs/flutter-apk/app-debug.apk
+  build_ios:
+    name: Build Flutter (ios)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "16.0.*"
+      - uses: subosito/flutter-action@v1
+      - run: flutter pub get
+      - run: |
+          cd ios
+          rm podfile.lock
+          pod deintegrate
+          pod repo update
+          pod install
+      - run: |
+          flutter build ios --no-codesign
+          cd build/ios/Release-iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+      - name: push artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.5.0
+        with:
+          appId: 1:119509377299:android:77f41e22321d687a44fae6
+          token: 1//03A3nhPAom2R-CgYIARAAGAMSNwF-L9IrJETsJcOs4mvMYdw5UbC2Kx4Ex2M0RpxNthT6kp2175-60iAx3mNTsM80jD_IgyVZPMQ
+          groups: test-group
+          file: build/ios/Release-iphoneos/app.ipa
+
+
+
+

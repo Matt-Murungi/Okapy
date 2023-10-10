@@ -1,0 +1,168 @@
+# This workflow will build and push a new image to digital ocean registry
+# and afterwards deploy it to do droplet
+
+name: Deploy on DO droplet
+on:
+  push:
+    branches: ['master']
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Authenticate 
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_LOGIN_TOKEN }}
+          
+      - name: Login to Digital Ocean Container Registry   
+        run: |
+          doctl registry login
+
+      - name: Create env file
+        #uses: ozaytsev86/create-env-file@v1
+        run: |
+          touch .env
+          echo ENVIRONMENT=${{ secrets.ENVIRONMENT_PROD }} >> .env
+          echo SECRET_KEY="${{ secrets.SECRET_KEY }}" >> .env
+          echo ACCOUNT_SID=${{ secrets.ACCOUNT_SID }} >> .env
+          echo AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} >> .env
+          echo SMS_SENDER=${{ secrets.SMS_SENDER }} >> .env
+          echo AUTHORIZE_API_LOGIN_ID=${{ secrets.AUTHORIZE_API_LOGIN_ID }} >> .env
+          echo AUTHORIZE_TRANSACTION_KEY=${{ secrets.AUTHORIZE_TRANSACTION_KEY }} >> .env
+          echo EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }} >> .env
+          echo EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }} >> .env
+          echo EMAIL_PORT=${{ secrets.EMAIL_PORT }} >> .env
+          echo DB_USER=${{ secrets.DB_USER }} >> .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo sslmode=require>> .env
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            registry.digitalocean.com/okapy-container-registry/okapy-api-prod:latest
+
+      - name: Deploy docker image to server
+        id: deploy-to-server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_HOST_PROD }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            sudo docker stop $(sudo docker container ls -q --filter name=okapy-api)
+            sudo docker rm -v $(sudo docker ps -aq -f name=okapy-api)
+            sudo docker rmi registry.digitalocean.com/okapy-container-registry/okapy-api-prod:latest
+            sudo doctl registry login
+            sudo docker pull registry.digitalocean.com/okapy-container-registry/okapy-api-prod:latest
+            sudo docker run --name okapy-api -e DB_PASSWORD="${{ secrets.DB_PASSWORD_PROD }}"  -e DB_HOST="${{ secrets.DB_HOST_PROD }}"  -e REDIS_SERVER_IP="${{ secrets.REDIS_SERVER_IP_PROD }}" -p ${{ secrets.EXPOSED_APPLICATION_PORT }}:${{ secrets.INTERNAL_APPLICATION_PORT }} -d registry.digitalocean.com/okapy-container-registry/okapy-api-prod:latest
+
+
+## This workflow will build and push a new container image to Amazon ECR
+##
+## To use this workflow, you will need to complete the following set-up steps:
+##
+## 1. Create an ECR repository to store your images.
+##    For example: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-2`.
+##    Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
+##    Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
+##
+## 2. Replace the value of the `IMAGE_NAME` environment variable in the workflow below with the name of the your image
+##
+## 3. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+##    See the documentation for each action used below for the recommended IAM policies for this IAM user,
+##    and best practices on handling the access key credentials.
+
+# name: Push images to ECR
+
+# on:
+#   push:
+#     branches: ['master']
+
+# env:
+#   AWS_REGION: us-east-1             # set this to your preferred AWS region, e.g. us-west-1
+#   ECR_REPOSITORY: okapy-api-prod    # set this to your Amazon ECR repository name
+
+#   IMAGE_NAME: okapy-api-prod
+#               # set this to the name of the image you want to upload
+# permissions:
+#   contents: read
+
+# jobs:
+#   build-push-ecr:
+#     name: Build and push to ECR
+#     runs-on: ubuntu-latest
+#     environment: production
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v3
+
+#     - name: Automatic Tagging of Releases
+#       id: increment-git-tag
+#       run: |
+#         bash ./git_tag/git_tag_update.sh -v patch
+
+#     - name: Configure AWS credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ env.AWS_REGION }}
+
+#     - name: Login to Amazon ECR
+#       id: login-ecr
+#       uses: aws-actions/amazon-ecr-login@v1
+
+#     - name: Retrieve Secrets
+#       id: app_secrets
+#       uses: t-botz/aws-secrets-manager-read-action@v2
+#       with:
+#         secret-id: APP_SPECIFIC_SECRETS
+#         mask-json-values: false
+#         keys-as-env-vars: true
+#         keys-as-outputs: true
+#         append-to-env-file: ./.env
+
+#     - name: Retrieve Secrets
+#       id: db_secrets
+#       uses: t-botz/aws-secrets-manager-read-action@v2
+#       with:
+#         secret-id: Prod_DB_Credentials
+#         mask-json-values: false
+#         keys-as-env-vars: true
+#         keys-as-outputs: true
+#         append-to-env-file: ./.env
+
+#     - name: Retrieve Secrets
+#       id: server_ip
+#       uses: t-botz/aws-secrets-manager-read-action@v2
+#       with:
+#         secret-id: PROD_SERVER_IP
+#         mask-json-values: false
+#         keys-as-env-vars: true
+#         keys-as-outputs: true
+#         append-to-env-file: ./.env
+
+#     - name: Tag, build and push image to Amazon ECR
+#       id: tag-push-images
+#       env:
+#         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#         IMAGE_TAG: ${{ github.sha }}
+#         GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
+
+#       run: |
+#         # push it to ECR
+#         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GIT_TAG .
+#         docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$GIT_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+#         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GIT_TAG
+#         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+#         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$GIT_TAG"
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>119509377299-h1k9suqusetr2a1uhajrkr8ks203l084.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.119509377299-h1k9suqusetr2a1uhajrkr8ks203l084</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDBnOJxYuOimuT0na_dokblbQ0PfOXj79E</string>
+	<key>GCM_SENDER_ID</key>
+	<string>119509377299</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.okapy.okapydriver</string>
+	<key>PROJECT_ID</key>
+	<string>okapy-driver</string>
+	<key>STORAGE_BUCKET</key>
+	<string>okapy-driver.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:119509377299:ios:68b482ffcd01706344fae6</string>
+</dict>
+</plist>

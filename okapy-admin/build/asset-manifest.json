@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0004d16c.css",
+    "main.js": "/static/js/main.cd347d32.js",
+    "static/media/business_image.png": "/static/media/business_image.7fa6e206841edcd037f1.png",
+    "static/media/certificate.png": "/static/media/certificate.1ad1bdd1772a565c055a.png",
+    "static/media/license.png": "/static/media/license.253038355836cc34fd03.png",
+    "static/media/logo.svg": "/static/media/logo.86d102b429b7f43ec4c964666e4acac6.svg",
+    "static/media/car.png": "/static/media/car.b56bde717d7796a5ceb0.png",
+    "static/media/Lorry.svg": "/static/media/Lorry.3c1f336918552144c196f3b7818d69e2.svg",
+    "static/media/Picked.svg": "/static/media/Picked.4d08d2c1f9f29a4a78cc695a180ede7b.svg",
+    "static/media/Cancelled.svg": "/static/media/Cancelled.60967a572b21d81cf88317f4bb3bd050.svg",
+    "static/media/Completed.svg": "/static/media/Completed.9849cd20c80377419c3d0e608e9bdfc5.svg",
+    "index.html": "/index.html",
+    "static/media/Transaction.svg": "/static/media/Transaction.89556f3f141d7d726e816121bf1e0b3c.svg",
+    "static/media/Requests.svg": "/static/media/Requests.3a06bca50ec4a9f41ae1b61d929a6ff7.svg",
+    "static/media/Finance.svg": "/static/media/Finance.ee624bdb1a0c3fb138ec6e5c2ad3327b.svg",
+    "main.0004d16c.css.map": "/static/css/main.0004d16c.css.map",
+    "main.cd347d32.js.map": "/static/js/main.cd347d32.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0004d16c.css",
+    "static/js/main.cd347d32.js"
+  ]
+}

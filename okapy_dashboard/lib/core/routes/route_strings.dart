@@ -1,0 +1,10 @@
+const String homeRoute = "/";
+const String dashboardRoute = "dashboard";
+const String loginRoute = "/login";
+const String paymentRoute = "/payments";
+const String productRoute = "/products";
+const String bookingRoute = "/bookings";
+const String orderRoute = "/orders";
+const String history = "/order-management";
+const String profile = "/profile";
+const String paymentDetailsRoute = "/payment-details";

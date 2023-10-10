@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  okapy_admin:
+    build: .
+    container_name: okapy_admin_container
+    ports:
+      - '4000:4000'
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true

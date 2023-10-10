@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "142981564123",
+    "project_id": "okapy-ddf9a",
+    "storage_bucket": "okapy-ddf9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142981564123:android:2e9a62284ea55f0c2d6efe",
+        "android_client_info": {
+          "package_name": "com.connect.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "142981564123-lmd2oqd7b0dtla21ovhpsv8mqaesrrj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWzJ9pTRktN8vhhmjmc24I0QY4pTUHOBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "142981564123-lmd2oqd7b0dtla21ovhpsv8mqaesrrj0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "142981564123-ku26afficievsgv2ra88c0m84ujvavcm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.okapy.okapydriver"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142981564123:android:2ca473f03afccc902d6efe",
+        "android_client_info": {
+          "package_name": "com.okapyapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "142981564123-lmd2oqd7b0dtla21ovhpsv8mqaesrrj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWzJ9pTRktN8vhhmjmc24I0QY4pTUHOBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "142981564123-lmd2oqd7b0dtla21ovhpsv8mqaesrrj0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "142981564123-ku26afficievsgv2ra88c0m84ujvavcm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.okapy.okapydriver"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

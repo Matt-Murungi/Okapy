@@ -1,0 +1,47 @@
+# This workflow will build and push a new image to digital ocean registry
+# and afterwards deploy it to do droplet
+
+name: Deploy on DO droplet
+on:
+  push:
+    branches: ['docker-admin']
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Authenticate
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: dop_v1_46641b47f7bde721d8f0b1d1d1b9fb8cde9cdb93c7134d886faf435f76888538
+
+      - name: Login to Digital Ocean Container Registry
+        run: |
+          doctl registry login
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            registry.digitalocean.com/okapy-container-registry/okapy-admin:latest
+
+      - name: Deploy docker image to server
+        id: deploy-to-server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_HOST_PROD }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            # sudo docker stop $(sudo docker container ls -q --filter name=okapy-admin)
+            # sudo docker rm -v $(sudo docker ps -aq -f name=okapy-admin)
+            # sudo docker rmi registry.digitalocean.com/okapy-container-registry/okapy-admin:latest
+            sudo doctl registry login
+            sudo docker pull registry.digitalocean.com/okapy-container-registry/okapy-admin:latest
+            sudo docker run --name okapy-admin -d registry.digitalocean.com/okapy-container-registry/okapy-admin:latest
+
